@@ -1,32 +1,49 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Table, Select} from "antd";
+import {useDispatch, useSelector} from "react-redux";
+import {getLocationsAction} from "../redux/actions/getLocations";
+import {setLocationEnd, setLocationStart} from "../redux/actions/setLocations";
 
 const TableContainer = () => {
+    const locations = useSelector(state => state.locations)
+    const dispatch = useDispatch()
 
-    const { Option } = Select;
+    const {Option} = Select;
 
-    const dataSource = [
-        {
-            key: '1',
-            name: 'Alaska'
-        },
-        {
-            key: '2',
-            name: 'Nevada'
-        },
-    ];
+
+
+    const handleChangeStart = (value)=>{
+        dispatch(setLocationStart(value.split(',').map(point=>+point)))
+    }
+
+    const handleChangeEnd = (value)=>{
+        dispatch(setLocationEnd(value.split(',').map(point=>+point)))
+    }
+
+    useEffect(()=>{
+        dispatch(getLocationsAction())
+    }, [dispatch])
+
+    useEffect(()=>{
+        if (locations.length){
+            dispatch(setLocationStart(locations[0].geo))
+            dispatch(setLocationEnd(locations[1].geo))
+        }
+    }, [dispatch, locations])
 
     const columns = [
         {
             title: 'Start Point',
             dataIndex: 'start-point',
             key: 'start',
-            render: ()=> {
+            render: () => {
                 return (
-                    <Select defaultValue="lucy" style={{ width: 120 }}>
-                        <Option value="jack">Jack</Option>
-                        <Option value="lucy">Lucy</Option>
-                        <Option value="Yiminghe">yiminghe</Option>
+                    <Select defaultValue={locations[0].name} style={{width: 120}} onChange={handleChangeStart}>
+                        {
+                            locations.map(location => {
+                                return <Option value={location.geo.toString()} key={location.latitude}>{location.state}</Option>
+                            })
+                        }
                     </Select>
                 )
             }
@@ -35,12 +52,14 @@ const TableContainer = () => {
             title: 'End Point',
             dataIndex: 'end-point',
             key: 'end',
-            render: ()=> {
+            render: () => {
                 return (
-                    <Select defaultValue="lucy" style={{ width: 120 }}>
-                        <Option value="jack">Jack</Option>
-                        <Option value="lucy">Lucy</Option>
-                        <Option value="Yiminghe">yiminghe</Option>
+                    <Select defaultValue={locations[1].name} style={{width: 120}} onChange={handleChangeEnd}>
+                        {
+                            locations.map(location => {
+                                return <Option value={location.geo.toString()} key={location.latitude}>{location.state}</Option>
+                            })
+                        }
                     </Select>
                 )
             }
@@ -48,7 +67,9 @@ const TableContainer = () => {
     ];
 
     return (
-        <Table dataSource={dataSource} columns={columns} />
+        <Table dataSource={locations} columns={columns} rowClassName={(record, index) => {
+
+        }}/>
     );
 };
 
