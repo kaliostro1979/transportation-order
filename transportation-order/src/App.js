@@ -7,9 +7,16 @@ import TableContainer from "./Components/TableContainer";
 
 function App() {
     return (
-        <>
-            <Map/>
-        </>
+        <div className={'.container'}>
+            <Row>
+                <Col span={8}>
+                    <TableContainer/>
+                </Col>
+                <Col span={16}>
+                    <Map/>
+                </Col>
+            </Row>
+        </div>
     );
 }
 
