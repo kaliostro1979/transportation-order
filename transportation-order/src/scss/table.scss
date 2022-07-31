@@ -1,0 +1,10 @@
+.ant-table-tbody {
+  tr {
+    &.selected {
+      background-color: #c9c9c9;
+    }
+    &:hover {
+      background-color: unset;
+    }
+  }
+}

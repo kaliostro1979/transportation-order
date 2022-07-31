@@ -1,16 +1,16 @@
-import React, {useEffect} from 'react';
-import {Table, Select} from "antd";
+import React, {useEffect, useState} from 'react';
+import {Table, Select, Radio} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {getLocationsAction} from "../redux/actions/getLocations";
 import {setLocationEnd, setLocationStart} from "../redux/actions/setLocations";
+import {selectRowAction} from "../redux/actions/selectRow";
 
 const TableContainer = () => {
     const locations = useSelector(state => state.locations)
+    const selectedRowIndex = useSelector(state => state.selectedRow)
     const dispatch = useDispatch()
 
     const {Option} = Select;
-
-
 
     const handleChangeStart = (value)=>{
         dispatch(setLocationStart(value.split(',').map(point=>+point)))
@@ -67,8 +67,14 @@ const TableContainer = () => {
     ];
 
     return (
-        <Table dataSource={locations} columns={columns} rowClassName={(record, index) => {
-
+        <Table dataSource={locations} columns={columns} rowClassName={(record, index = 0) => {
+            return index === selectedRowIndex ? 'selected' : ''
+        }}
+               onRow={(record, rowIndex) => {
+            return {
+                onClick: event => {
+                    dispatch(selectRowAction(rowIndex));}, // click row
+            };
         }}/>
     );
 };
