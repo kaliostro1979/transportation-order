@@ -3,41 +3,31 @@ import {Table, Select} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {getLocationsAction} from "../redux/actions/getLocations";
 import {setLocationEnd, setLocationStart} from "../redux/actions/setLocations";
-import {useSearchParams} from "react-router-dom";
-import {getSelectedRowWaypointsAction} from "../redux/actions/getSelectedRowWayPoints";
+import {resetState} from "../redux/actions/resestState";
+import {getSelectedRowWaypoints} from "../redux/actions/getSelectedRowWaypoints";
 
-const TableContainer = () => {
+
+const TableContainer = ({selectedWaypoints}) => {
     const locations = useSelector(state => state.locations)
-    const wayPoint = useSelector(state => state.wayPoints)
     const dispatch = useDispatch()
 
-
-    let [searchParams, setSearchParams] = useSearchParams({
-        page: 1,
-        row: 0
-    });
-    const [page, setPage] = useState(searchParams.get('page'))
-    const [selectedRowIndex, setSelectedRowIndex] = useState(searchParams.get('row'))
+    const [selectedRowIndex, setSelectedRowIndex] = useState(0)
+    const [prevIndex, setPrevIndex] = useState(0)
 
     const {Option} = Select;
 
-    const handleChangeStart = (value) => {
-        dispatch(setLocationStart(value.split(',').map(point => +point), page, selectedRowIndex))
+    const handleChangeStart = (value, options) => {
+        setPrevIndex(options.row)
+        if (options.row !== prevIndex) {
+            dispatch(resetState())
+        }
+
+        dispatch(setLocationStart(value.split(',').map(point => +point), options.row))
     }
 
-    const handleChangeEnd = (value) => {
-        dispatch(setLocationEnd(value.split(',').map(point => +point), page, selectedRowIndex))
+    const handleChangeEnd = (value, options) => {
+        dispatch(setLocationEnd(value.split(',').map(point => +point), options.row))
     }
-
-    const handlePagination = (page) => {
-        setPage(page);
-        setSearchParams({
-            page: page,
-            row: selectedRowIndex
-        })
-    }
-
-
 
     useEffect(() => {
         dispatch(getLocationsAction())
@@ -54,7 +44,7 @@ const TableContainer = () => {
                         {
                             locations.map((location) => {
                                 return <Option value={location.geo.toString()}
-                                               key={`${location.latitude}-${index}`}>{location.state}</Option>
+                                               key={`${location.latitude}`} row={index}>{location.state}</Option>
                             })
                         }
                     </Select>
@@ -71,7 +61,8 @@ const TableContainer = () => {
                             key={index}>
                         {
                             locations.map((location) => {
-                                return <Option value={location.geo.toString()} key={`${location.latitude}-${index}`}>{location.state}</Option>
+                                return <Option value={location.geo.toString()} key={`${location.latitude}-${index}`}
+                                               row={index}>{location.state}</Option>
                             })
                         }
                     </Select>
@@ -80,26 +71,25 @@ const TableContainer = () => {
         }
     ];
 
-    console.log(wayPoint);
-
     return (
         <Table
             dataSource={locations}
             columns={columns}
-            rowClassName={(record, index = 0, page) => {
+            rowClassName={(record, index = 0) => {
                 return index === +selectedRowIndex ? 'selected' : ''
             }}
             onRow={(record, rowIndex) => {
                 return {
                     onClick: event => {
-                        event.stopPropagation()
-                        setSelectedRowIndex(rowIndex)
-                        setSearchParams({page: page, row: rowIndex})
-                        dispatch(getSelectedRowWaypointsAction(page, rowIndex, wayPoint))
+                        if (event.target.parentElement === event.currentTarget) {
+                            event.stopPropagation()
+                            setSelectedRowIndex(rowIndex)
+                            dispatch(getSelectedRowWaypoints(selectedWaypoints, rowIndex))
+                        }
                     },
                 };
             }}
-            pagination={{defaultPageSize: 10, onChange: handlePagination, current: +page}}
+            pagination={false}
         />
     );
 };

@@ -8,8 +8,8 @@ export default function RoutingLayer({wayPoint}) {
     const map = useMap();
 
     useEffect(() => {
-        const start = wayPoint.length && wayPoint[0]
-        const end = wayPoint.length && wayPoint[1]
+        const start = wayPoint && wayPoint.start
+        const end = wayPoint && wayPoint.end
 
         if (!map) return;
         const routingControl = L.Routing.control({
