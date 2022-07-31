@@ -1,4 +1,13 @@
 .container {
+  position: relative;
   max-width: 1440px;
   margin: 0 auto;
+}
+
+.gutter {
+  &:hover {
+    background-color: gray;
+    cursor: col-resize;
+    transition: all .3s ease;
+  }
 }

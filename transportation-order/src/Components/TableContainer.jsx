@@ -84,7 +84,9 @@ const TableContainer = ({selectedWaypoints}) => {
                         if (event.target.parentElement === event.currentTarget) {
                             event.stopPropagation()
                             setSelectedRowIndex(rowIndex)
-                            dispatch(getSelectedRowWaypoints(selectedWaypoints, rowIndex))
+                            if (selectedWaypoints.length){
+                                dispatch(getSelectedRowWaypoints(selectedWaypoints, rowIndex))
+                            }
                         }
                     },
                 };

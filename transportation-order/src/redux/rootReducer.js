@@ -3,7 +3,6 @@ import {locationsReducer} from "./reducers/locations";
 import {wayPointsReducer} from "./reducers/wayPoints";
 import {resetStateReducer} from "./reducers/reset";
 import {selectedRowReducer} from "./reducers/selectedRow";
-import {selectedRowWaypointsReducer} from "./reducers/seletedRowWaypoints";
 import {selectedWaypointsReducer} from "./reducers/selectedWayPoints";
 
 
@@ -12,6 +11,5 @@ export const rootReducer = combineReducers({
     wayPoints: wayPointsReducer,
     reset: resetStateReducer,
     selectedRow: selectedRowReducer,
-    selectedWaypoints: selectedWaypointsReducer,
-    selectedRowWaypoints: selectedRowWaypointsReducer
+    selectedWaypoints: selectedWaypointsReducer
 })
