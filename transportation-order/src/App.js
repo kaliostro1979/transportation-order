@@ -1,24 +1,16 @@
-import Map from "./Components/Map";
-import {Col, Row} from 'antd';
-import TableContainer from "./Components/TableContainer";
-
+import {BrowserRouter, Routes, Route} from "react-router-dom";
+import Main from "./Components/Main";
 
 
 function App() {
     return (
-        <div className={'.container'}>
-            <Row>
-                <Col span={8}>
-                    <TableContainer/>
-                </Col>
-                <Col span={16}>
-                    <Map/>
-                </Col>
-            </Row>
-        </div>
+        <BrowserRouter>
+            <Routes>
+                <Route path={"/"} element={<Main/>}></Route>
+            </Routes>
+        </BrowserRouter>
     );
 }
-
 
 
 export default App;
