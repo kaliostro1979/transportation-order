@@ -9,17 +9,28 @@
   }
 }
 
-.ant-table {
-  overflow: auto;
-  &::-webkit-scrollbar {
-    height: 5px;
-  }
+.ant-spin-nested-loading {
+  height: 100%;
 
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
+  .ant-spin-container {
+    height: inherit;
 
-  &::-webkit-scrollbar-thumb {
-    background: #888;
+    .ant-table {
+      height: inherit;
+      overflow: auto;
+      &::-webkit-scrollbar {
+        height: 5px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #888;
+      }
+    }
   }
 }
+
+

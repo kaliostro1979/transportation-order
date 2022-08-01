@@ -5,11 +5,20 @@ import {getLocationsAction} from "../redux/actions/getLocations";
 import {setLocationEnd, setLocationStart} from "../redux/actions/setLocations";
 import {resetState} from "../redux/actions/resestState";
 import {getSelectedRowWaypoints} from "../redux/actions/getSelectedRowWaypoints";
+import {setSelectedWaypointsAction} from "../redux/actions/setSelectedWayPoints";
 
 
-const TableContainer = ({selectedWaypoints}) => {
+const TableContainer = () => {
     const locations = useSelector(state => state.locations)
+    const wayPoint = useSelector(state => state.wayPoints)
+    const selectedWaypoints = useSelector(state => state.selectedWaypoints)
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (wayPoint.start && wayPoint.end) {
+            dispatch(setSelectedWaypointsAction(wayPoint))
+        }
+    }, [dispatch, wayPoint])
 
     const [selectedRowIndex, setSelectedRowIndex] = useState(0)
     const [prevIndex, setPrevIndex] = useState(0)
@@ -43,8 +52,15 @@ const TableContainer = ({selectedWaypoints}) => {
                     <Select style={{width: 120}} onChange={handleChangeStart}>
                         {
                             locations.map((location) => {
-                                return <Option value={location.geo.toString()}
-                                               key={`${location.latitude}`} row={index}>{location.state}</Option>
+                                return (
+                                    <Option
+                                        value={location.geo.toString()}
+                                        key={location.latitude}
+                                        row={index}
+                                    >
+                                        {location.state}
+                                    </Option>
+                                )
                             })
                         }
                     </Select>
@@ -61,8 +77,16 @@ const TableContainer = ({selectedWaypoints}) => {
                             key={index}>
                         {
                             locations.map((location) => {
-                                return <Option value={location.geo.toString()} key={`${location.latitude}-${index}`}
-                                               row={index}>{location.state}</Option>
+                                return (
+                                    <Option
+                                        value={location.geo.toString()}
+                                        key={location.latitude}
+                                        row={index}
+                                    >
+                                        {location.state}
+                                    </Option>
+                                )
+
                             })
                         }
                     </Select>
